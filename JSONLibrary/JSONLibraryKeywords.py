@@ -35,6 +35,7 @@ class JSONLibraryKeywords(object):
             raise IOError
         with open(file_name) as json_file:
             data = json.load(json_file)
+        print(f'JSON: {data}')
         return data
 
     @keyword('Add Object To Json')
@@ -52,6 +53,7 @@ class JSONLibraryKeywords(object):
             | ${dict}=  | Create Dictionary    | latitude=13.1234 | longitude=130.1234 |
             | ${json}=  |  Add Object To Json  | ${json}          | $..address         |  ${dict} |
             """
+        print(f'Object: {object_to_add}')
         json_path_expr = parse(json_path)
         for match in json_path_expr.find(json_object):
             if type(match.value) is dict:
@@ -59,6 +61,7 @@ class JSONLibraryKeywords(object):
             if type(match.value) is list:
                 match.value.append(object_to_add)
 
+        print(f'JSON: {json_object}')
         return json_object
 
     @keyword('Get Value From Json')
@@ -98,6 +101,8 @@ class JSONLibraryKeywords(object):
                 match.context.value[match.path.index] = new_value
             elif isinstance(path, Fields):
                 match.context.value[match.path.fields[0]] = new_value
+        print(f'New value: {new_value}')
+        print(f'JSON: {json_object}')
         return json_object
 
     @keyword('Delete Object From Json')
@@ -134,6 +139,7 @@ class JSONLibraryKeywords(object):
         Examples:
         | ${json_str}=  |  Convert JSON To String | ${json_obj} |
         """
+        print(f'String: {json.dumps(json_object)}')
         return json.dumps(json_object)
 
     @keyword('Convert String to JSON')
@@ -148,5 +154,6 @@ class JSONLibraryKeywords(object):
         Examples:
         | ${json_object}=  |  Convert String to JSON | ${json_string} |
         """
+        print(f'JSON: {json.loads(json_string)}')
         return json.loads(json_string)
 
